@@ -1,0 +1,10 @@
+_format_version: "3.0"
+
+services:
+  - name: supplier-catalog
+    url: http://supplier-catalog:8000
+    routes:
+      - name: suppliers
+        paths:
+          - /suppliers
+        strip_path: false
