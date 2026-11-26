@@ -1,0 +1,30 @@
+{
+  "realm": "cater-again",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "cater-again-client",
+      "name": "CaterAgain Demo Client",
+      "protocol": "openid-connect",
+      "enabled": true,
+      "publicClient": true,
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "protocolMappers": [
+        {
+          "name": "Company ID",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "config": {
+            "user.attribute": "company_id",
+            "claim.name": "company_id",
+            "jsonType.label": "String",
+            "access.token.claim": "true",
+            "multivalued": "false"
+          }
+        }
+      ]
+    }
+  ]
+}

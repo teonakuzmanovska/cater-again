@@ -22,6 +22,9 @@ services:
       DB_NAME: ${POSTGRES_DB}
       DB_USER: ${POSTGRES_USER}
       DB_PASSWORD: ${POSTGRES_PASSWORD}
+      KEYCLOAK_ISSUER: http://127.0.0.1:8081/realms/cater-again
+      KEYCLOAK_JWKS_URL: http://keycloak:8080/realms/cater-again/protocol/openid-connect/certs
+      KEYCLOAK_CLIENT_ID: cater-again-client
     depends_on:
       postgres:
         condition: service_healthy
@@ -35,6 +38,25 @@ services:
       - ./kong/kong.yml:/etc/kong/kong.yml:ro
     ports:
       - "127.0.0.1:8000:8000"
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.8.2
+    command: ["start-dev", "--import-realm"]
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN_USERNAME}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      KC_DB_SCHEMA: keycloak
+      KC_DB_USERNAME: ${POSTGRES_USER}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./keycloak/configs:/opt/keycloak/data/import:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8081:8080"
 
 volumes:
   postgres-data:
